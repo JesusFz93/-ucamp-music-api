@@ -8,7 +8,7 @@ const {
 const router = Router();
 
 router.get("/", getMusic_CT);
-router.get("/:id", getMusicPorLetra_CT);
+router.get("/:name", getMusicPorLetra_CT);
 
 module.exports = router;
 

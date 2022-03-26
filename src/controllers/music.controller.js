@@ -1,4 +1,5 @@
 const { response, request } = require("express");
+const { getMusic_BL, getMusicID_BL } = require("../business-logic/music.bl");
 
 const { GenericResponse, CustomMessages } = require("../helpers");
 
@@ -23,11 +24,12 @@ const db = [
   },
 ];
 
-const getMusic_CT = (req = request, res = response) => {
+const getMusic_CT = async (req = request, res = response) => {
   const resp = new GenericResponse();
   try {
+    const musica = await getMusic_BL();
     resp.msg = "Lista de canciones obtenida";
-    resp.data = [...db];
+    resp.data = musica;
     return res.json(resp);
   } catch (error) {
     resp.ok = false;
@@ -36,20 +38,21 @@ const getMusic_CT = (req = request, res = response) => {
   }
 };
 
-const getMusicPorLetra_CT = (req = request, res = response) => {
+const getMusicPorLetra_CT = async (req = request, res = response) => {
   const resp = new GenericResponse();
   try {
-    const { id } = req.params;
+    const { name } = req.params;
     resp.msg = "Cancion obtenida";
-    const cancion = db.find((c) => c.id === parseInt(id));
+    const cancion = await getMusicID_BL(name);
     if (!cancion) {
       resp.ok = false;
-      resp.msg = `No se encontro la cancion con el nombre ${id} `;
+      resp.msg = `No se encontro la cancion con el nombre ${name} `;
       return res.status(404).json(resp);
     }
-    resp.data = [cancion];
+    resp.data = cancion;
     return res.json(resp);
   } catch (error) {
+    console.log(error);
     resp.ok = false;
     resp.msg = CustomMessages.error_500;
     return res.status(500).json(resp);
