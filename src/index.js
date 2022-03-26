@@ -1,7 +1,10 @@
 require("dotenv").config();
 const express = require("express");
+const { dbConnection } = require("./config/database/mongodb");
 const app = express();
 const cors = require("cors");
+
+dbConnection();
 
 const musicRoutes = require("./routes/music.routes");
 
